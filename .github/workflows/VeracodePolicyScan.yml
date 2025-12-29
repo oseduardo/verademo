@@ -25,7 +25,7 @@ jobs:
         # Runs Veracode SAST Scan
         - name: VERACODE SAST - POLICY SCAN
           if: ${{ success() }}
-          uses: veracode/veracode-uploadandscan-action@0.2.6 
+          uses: veracode/veracode-uploadandscan-action@0.2.11 
           with:
             appname: ${{ inputs.VERACODE_APP_PROFILE_NAME }}
             createprofile: false
