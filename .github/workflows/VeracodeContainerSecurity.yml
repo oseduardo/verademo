@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-        # Runs Veracode Container Security - Failing on failed Bult-In Policy
+        # Runs Veracode Container Security - Failing on Policy from platform
         - name: VERACODE CONTAINER SECURITY
           if: ${{ success() }}
           env:
@@ -46,8 +46,9 @@ jobs:
             curl -fsS https://tools.veracode.com/veracode-cli/install | sh
             export VERACODE_API_KEY_ID=$VID
             export VERACODE_API_KEY_SECRET=$VKEY
+            ./veracode policy get "myContainerSecurityDemoPolicy"
             trap 'handle_cs_code $1' ERR
-            ./veracode scan --type repo --source ${{ inputs.REPO_URI }} --format table --output cs_results.json
+            ./veracode scan --type repo --source ${{ inputs.REPO_URI }} --format json --output cs_results.json --policy myContainerSecurityDemoPolicy.rego
 
         #It's recommended to create here an artifact (cs_results.json file) in order to store the Container Security scan results,
         #so the user can review that file to take remediation actions on it
@@ -61,7 +62,7 @@ jobs:
             echo '======================================================='
             cat cs_results.json
             echo ''
-            PASS=$(cat cs_results.json | grep "Policy Passed = " | awk '{print $4}')
+            PASS=$(jq '."policy-passed"' cs_results.json)
             if $PASS; then
               exit 0
             else
