@@ -24,7 +24,7 @@ jobs:
         # Runs Veracode Sandbox Scan
         - name: VERACODE SAST - SANDBOX SCAN
           if: ${{ success() }}
-          uses: veracode/veracode-uploadandscan-action@0.2.6 
+          uses: veracode/veracode-uploadandscan-action@0.2.11
           with:
             appname: ${{ inputs.VERACODE_APP_PROFILE_NAME }}
             createprofile: true
